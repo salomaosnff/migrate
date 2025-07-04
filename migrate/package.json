@@ -1,0 +1,35 @@
+{
+  "name": "@salomaosnff/migrate",
+  "version": "0.0.1",
+  "description": "A migration tool for Node.js applications",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./config": "./dist/config.js"
+  },
+  "bin": {
+    "migrate": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Salomão Neto <contato@sallon.dev>",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.1",
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "ts-node": "^10.9.2"
+  }
+}
