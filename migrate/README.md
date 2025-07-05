@@ -1,15 +1,15 @@
-# @salomaosnff/migrate-tool
+# @salomaosnff/migrate
 
 A flexible and extensible migration tool for Node.js applications, built with TypeScript and based on the Strategy pattern.
 
 ## 🚀 Installation
 
 ```bash
-npm install @salomaosnff/migrate-tool
+npm install @salomaosnff/migrate
 # or
-yarn add @salomaosnff/migrate-tool
+yarn add @salomaosnff/migrate
 # or
-pnpm add @salomaosnff/migrate-tool
+pnpm add @salomaosnff/migrate
 ```
 
 ## 📋 Features
@@ -39,7 +39,7 @@ This library uses the Strategy pattern to support different types of migrations.
 A simple strategy that stores migration state in memory. Useful for testing and development.
 
 ```typescript
-import { MemoryStrategy } from '@salomaosnff/migrate-tool'
+import { MemoryStrategy } from '@salomaosnff/migrate'
 
 const strategy = new MemoryStrategy()
 ```
@@ -59,7 +59,7 @@ This command creates a configuration file `migrate.config.ts` in the current dir
 Create a file `migrate.config.ts` in the root of your project:
 
 ```typescript
-import { defineConfig, MemoryStrategy } from '@salomaosnff/migrate-tool'
+import { defineConfig, MemoryStrategy } from '@salomaosnff/migrate'
 
 export default defineConfig({
   strategy: new MemoryStrategy(),
@@ -128,8 +128,8 @@ npx migrate rollback
 ### Basic Example
 
 ```typescript
-import { Migrator, defineConfig } from '@salomaosnff/migrate-tool'
-import { MemoryStrategy } from '@salomaosnff/migrate-tool'
+import { Migrator, defineConfig } from '@salomaosnff/migrate'
+import { MemoryStrategy } from '@salomaosnff/migrate'
 
 const config = defineConfig({
   strategy: new MemoryStrategy(),
@@ -200,7 +200,7 @@ Returns a list of pending migrations.
 To create a custom strategy, implement the `MigrationStrategy` interface:
 
 ```typescript
-import { MigrationStrategy, Config } from '@salomaosnff/migrate-tool'
+import { MigrationStrategy, Config } from '@salomaosnff/migrate'
 
 export class CustomStrategy implements MigrationStrategy {
   async setup(config: Required<Config>): Promise<void> {
@@ -312,7 +312,7 @@ The locking system prevents simultaneous migration execution, ensuring data inte
 
 ```typescript
 // database-strategy.ts
-import { MigrationStrategy, Config } from '@salomaosnff/migrate-tool'
+import { MigrationStrategy, Config } from '@salomaosnff/migrate'
 import { Database } from 'your-database-library'
 
 export class DatabaseStrategy implements MigrationStrategy {
@@ -365,7 +365,7 @@ export class DatabaseStrategy implements MigrationStrategy {
 
 ```typescript
 // migrate.config.ts
-import { defineConfig } from '@salomaosnff/migrate-tool'
+import { defineConfig } from '@salomaosnff/migrate'
 import { DatabaseStrategy } from './database-strategy'
 import { createDatabase } from 'your-database-library'
 
@@ -398,7 +398,7 @@ Contributions are welcome! Please follow these steps:
 
 ```bash
 # Clone the repository
-git clone https://github.com/salomaosnff/migrate-tool.git
+git clone https://github.com/salomaosnff/migrate.git
 
 # Install dependencies
 pnpm install

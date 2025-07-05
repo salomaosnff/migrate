@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/salomaosnff/migrate.git"
-  },
-  "homepage": "https://github.com/salomaosnff/migrate",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

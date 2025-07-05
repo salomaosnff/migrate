@@ -1,6 +1,6 @@
 {
   "name": "@salomaosnff/migrate",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A migration tool for Node.js applications",
   "main": "./dist/index.js",
   "exports": {
@@ -20,7 +20,8 @@
   "homepage": "https://github.com/salomaosnff/migrate",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "build-and-deploy": "pnpm build && pnpm publish"
   },
   "keywords": [],
   "author": "Salomão Neto <contato@sallon.dev>",
