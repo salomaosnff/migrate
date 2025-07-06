@@ -1,0 +1,18 @@
+{
+  "name": "arangodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.1",
+  "dependencies": {
+    "@salomaosnff/migrate": "link:../../migrate",
+    "@salomaosnff/migrate-arango": "link:../../migrate-arango",
+    "arangojs": "^10.1.1"
+  }
+}
