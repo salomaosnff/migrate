@@ -1,6 +1,6 @@
 {
   "name": "@salomaosnff/migrate",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A migration tool for Node.js applications",
   "main": "./dist/index.js",
   "type": "module",
