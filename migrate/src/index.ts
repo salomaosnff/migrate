@@ -1,3 +1,3 @@
-export * from './config'
-export * from './core/strategy'
-export * from './core/migrator'
+export * from './config.js'
+export * from './core/strategy.js'
+export * from './core/migrator.js'

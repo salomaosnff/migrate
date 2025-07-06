@@ -1,12 +1,8 @@
 import { dirname, join, relative } from "node:path";
 import { mkdir, writeFile, readdir } from 'node:fs/promises'
-import { Config } from "../config";
-import { MigrationFile, MigrationApply } from "./strategy";
+import { Config } from "../config.js";
+import { MigrationFile } from "./strategy.js";
 import { existsSync } from "node:fs";
-
-function fileWithoutExtension(fileName: string): string {
-  return fileName.split('.').slice(0, -1).join('.');
-}
 
 export class Migrator {
   #config: Required<Config>

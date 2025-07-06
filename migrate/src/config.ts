@@ -1,5 +1,5 @@
 import { join } from "node:path"
-import { MigrationStrategy } from "./core/strategy"
+import { MigrationStrategy } from "./core/strategy.js"
 
 export interface Config {
   strategy: MigrationStrategy

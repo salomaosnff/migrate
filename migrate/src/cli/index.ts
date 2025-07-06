@@ -1,10 +1,10 @@
-#!/usr/bin/env node
-import 'ts-node/register'
+#!/usr/bin/env node --loader ts-node/esm
 import { program } from 'commander'
-import { Migrator } from '../core/migrator'
-import { extname, join } from 'path'
+import { Migrator } from '../core/migrator.js'
+import { join } from 'path'
 import { existsSync } from 'fs'
-import { writeFile } from 'fs/promises'
+import { readFile, rm, writeFile } from 'fs/promises'
+import { transform } from 'esbuild'
 
 async function createMigrator(configFile: string, cb: (mig: Migrator) => any): Promise<void> {
   if (!configFile) {
@@ -27,13 +27,33 @@ async function createMigrator(configFile: string, cb: (mig: Migrator) => any): P
     throw new Error(`Configuration file "${configFile}" does not exist in the current directory.`)
   }
 
-  const config = await import(configPath)
+  const configTransformed = await transform(await readFile(configPath, 'utf8'), {
+    loader: 'ts',
+    format: 'cjs',
+    target: 'es2024',
+    platform: 'node',
+    sourcemap: false,
+    keepNames: true
+  })
 
-  if (!config.default || !config.default.strategy) {
+  if (configTransformed.warnings.length > 0) {
+    console.warn('Warnings during configuration transformation:');
+    for (const warning of configTransformed.warnings) {
+      console.warn(warning.text);
+    }
+  }
+
+  const transformedConfigPath = join(process.cwd(), 'migrate.config.js')
+  await writeFile(transformedConfigPath, configTransformed.code, 'utf8')
+  const { default: { default: config } } = await import(transformedConfigPath)
+
+  await rm(transformedConfigPath, { force: true })
+
+  if (!config || !config.strategy) {
     throw new Error(`Configuration file "${configFile}" must export a default object with a "strategy" property.`)
   }
 
-  const mig = new Migrator(config.default)
+  const mig = new Migrator(config)
 
   try {
     await mig.setup()
@@ -56,19 +76,17 @@ program.command('init')
   .action(async () => {
     const configFile = program.optsWithGlobals().config || 'migrate.config.ts'
     const configPath = join(process.cwd(), configFile)
-    const ext = extname(configFile)
 
     if (existsSync(configPath)) {
       console.error(`Configuration file "${configFile}" already exists.`)
       return
     }
 
-    const configContent = `import { defineConfig } from '@salomaosnff/migrate-tool'
+    const configContent = `import { defineConfig } from '@salomaosnff/migrate'
 
 export default defineConfig({
   strategy: null, // Replace with your migration strategy instance
   migrations_dir: 'migrations',
-  migrations_extension: '${ext}',
 });
 
 `
