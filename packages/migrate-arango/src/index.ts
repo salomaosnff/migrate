@@ -51,7 +51,7 @@ export class ArangoDBStrategy implements MigrationStrategy {
       }
       console.groupEnd();
     }
-    const transformedConfigPath = join(tmpdir(), 'tmp.migration.js')
+    const transformedConfigPath = join(process.cwd(), 'tmp.migration.js')
     await writeFile(transformedConfigPath, configTransformed.code, 'utf8')
     const { default: res } = await import(transformedConfigPath)
     await rm(transformedConfigPath, { force: true })

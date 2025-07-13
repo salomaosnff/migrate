@@ -44,7 +44,7 @@ async function createMigrator(configFile: string, cb: (mig: Migrator) => any): P
     }
   }
 
-  const transformedConfigPath = join(tmpdir(), 'migrate.config.js')
+  const transformedConfigPath = join(process.cwd(), 'migrate.config.js')
   await writeFile(transformedConfigPath, configTransformed.code, 'utf8')
   const { default: { default: config } } = await import(transformedConfigPath)
 
