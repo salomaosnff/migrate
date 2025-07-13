@@ -1,10 +1,11 @@
-#!/usr/bin/env node --loader ts-node/esm
+#!/usr/bin/env node
 import { program } from 'commander'
 import { Migrator } from '../core/migrator.js'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { readFile, rm, writeFile } from 'fs/promises'
 import { transform } from 'esbuild'
+import { tmpdir } from 'os'
 
 async function createMigrator(configFile: string, cb: (mig: Migrator) => any): Promise<void> {
   if (!configFile) {
@@ -43,7 +44,7 @@ async function createMigrator(configFile: string, cb: (mig: Migrator) => any): P
     }
   }
 
-  const transformedConfigPath = join(process.cwd(), 'migrate.config.js')
+  const transformedConfigPath = join(tmpdir(), 'migrate.config.js')
   await writeFile(transformedConfigPath, configTransformed.code, 'utf8')
   const { default: { default: config } } = await import(transformedConfigPath)
 

@@ -1,0 +1,6 @@
+gitChecks: false
+packages:
+  - 'packages/*'
+  - 'examples/*'
+onlyBuiltDependencies:
+  - esbuild

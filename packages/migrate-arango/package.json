@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "build-and-deploy": "pnpm run build && pnpm publish --access public"
   },
   "repository": {
@@ -25,7 +25,8 @@
   "license": "MIT",
   "packageManager": "pnpm@10.11.1",
   "peerDependencies": {
-    "@salomaosnff/migrate": "^0.0.1",
+    "@salomaosnff/migrate": "^0.0.4",
+    "esbuild": "^0.25.5",
     "arangojs": "^10.1.1"
   },
   "publishConfig": {

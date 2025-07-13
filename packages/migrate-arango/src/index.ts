@@ -1,7 +1,14 @@
+import { join } from "node:path";
+import { readFile, rm, writeFile } from "node:fs/promises";
+
 import { Config, MigrationApply, MigrationFile, MigrationStrategy } from "@salomaosnff/migrate";
+
 import { aql, Database } from "arangojs";
 import { DocumentCollection } from "arangojs/collections";
 import { ConfigOptions } from "arangojs/configuration";
+
+import { transform } from "esbuild";
+import { tmpdir } from "node:os";
 
 export interface ArangoDBStrategyOptions {
   connection: ConfigOptions;
@@ -25,6 +32,31 @@ export class ArangoDBStrategy implements MigrationStrategy {
     this.#strategy_config = options as Required<ArangoDBStrategyOptions>;
     this.#changelog = this.#db.collection(this.#strategy_config.changelog_collection);
     this.#lock = this.#db.collection(this.#strategy_config.lock_collection);
+  }
+
+  async #execScript(script: string): Promise<any> {
+    const configTransformed = await transform(await readFile(script, 'utf8'), {
+      loader: 'ts',
+      format: 'cjs',
+      target: 'es2024',
+      platform: 'node',
+      sourcemap: false,
+      keepNames: true
+    })
+
+    if (configTransformed.warnings.length > 0) {
+      console.group('Warnings during script transformation:');
+      for (const warning of configTransformed.warnings) {
+        console.warn(warning.text);
+      }
+      console.groupEnd();
+    }
+    const transformedConfigPath = join(tmpdir(), 'tmp.migration.js')
+    await writeFile(transformedConfigPath, configTransformed.code, 'utf8')
+    const { default: res } = await import(transformedConfigPath)
+    await rm(transformedConfigPath, { force: true })
+
+    return res
   }
 
   async setup(config: Required<Config>): Promise<void> {
@@ -123,8 +155,7 @@ export class ArangoDBStrategy implements MigrationStrategy {
   }
 
   async up(migration: MigrationApply): Promise<void> {
-    const mig = await import(migration.filepath);
-    const up = mig.up ?? mig.default?.up;
+    const { up } = await this.#execScript(migration.filepath);
 
     if (typeof up !== 'function') {
       throw new Error(`Migration file ${migration.filepath} does not export an 'up' function.`);
@@ -143,8 +174,7 @@ export class ArangoDBStrategy implements MigrationStrategy {
 
 
   async down(migration: MigrationFile): Promise<void> {
-    const mig = await import(migration.filepath);
-    const down = mig.down ?? mig.default?.down;
+    const { down } = await this.#execScript(migration.filepath);
 
     if (typeof down !== 'function') {
       throw new Error(`Migration file ${migration.filepath} does not export a 'down' function.`);
